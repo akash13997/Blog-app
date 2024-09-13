@@ -18,8 +18,8 @@ const Home = () => {
   };
   return (
     <>
-    <div className="row d-flex justify-content-center">
-    <div className="col-6 border p-4">
+    <div className="row d-flex justify-content-center mt-4">
+    <div className="col-4 border p-4">
       <div className="p-4 box mt-3 text-center">
         Hello <br />
         {user && user.email}

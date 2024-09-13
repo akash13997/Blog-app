@@ -26,8 +26,8 @@ const Login = () => {
 
   return (
     <>
-    <div className="row d-flex justify-content-center">
-        <div className="col-6 border p-4">
+    <div className="row d-flex justify-content-center mt-4">
+        <div className="col-4 border p-4">
       <div className="p-4 box">
         <h2 className="mb-3">Auth Login Page</h2>
         {error && <Alert variant="danger">{error}</Alert>}
