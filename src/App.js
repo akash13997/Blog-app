@@ -6,7 +6,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 import MyNavbar from "./components/Navbar";
-import About from "./components/About";
+import Blog from "./components/Blog";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           <UserAuthContextProvider>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
             </Routes>

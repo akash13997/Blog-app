@@ -13,7 +13,7 @@ const MyNavbar = () => {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-4"> 
           <Nav.Link as={Link} to="/">Home</Nav.Link>
-          <Nav.Link as={Link} to="/about">About</Nav.Link>
+          <Nav.Link as={Link} to="/blog">Blog</Nav.Link>
         </Nav>
         <div className="ml-auto left_side">
           <Button as={Link} to="/login" variant="outline-primary" className="mx-2">Login</Button>
