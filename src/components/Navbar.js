@@ -9,9 +9,9 @@ const MyNavbar = () => {
         <div className='mx-4'>
       <Navbar.Brand as={Link} to="/">Demo</Navbar.Brand>
       </div>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+     <div className='mx-4'> <Navbar.Toggle aria-controls="basic-navbar-nav" /></div>
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ml-4"> 
+        <Nav className="ml-4 mx-4"> 
           <Nav.Link as={Link} to="/">Home</Nav.Link>
           <Nav.Link as={Link} to="/blog">Blog</Nav.Link>
         </Nav>
