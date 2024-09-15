@@ -1,4 +1,10 @@
-.left_side {
-    position: absolute;
-    right: 50px;
+
+.left_side{
+    margin-left: 15px;
 }
+@media (min-width: 992px) {
+    .left_side {
+        position: absolute;
+        right: 50px;
+    }
+  }
