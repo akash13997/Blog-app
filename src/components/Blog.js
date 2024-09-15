@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Blog = () => {
   const [posts, setPosts] = useState([]);
@@ -14,6 +16,20 @@ const Blog = () => {
     image: null
   });
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "posts"));
+        const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setPosts(postsData);
+      } catch (error) {
+        console.error("Error fetching posts: ", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
   const handleNewPostChange = (e) => {
     setNewPost({
       ...newPost,
@@ -27,13 +43,22 @@ const Blog = () => {
       image: URL.createObjectURL(e.target.files[0])
     });
   };
-
-  const addPost = () => {
+  const addPost = async () => {
     if (newPost.title && newPost.description) {
-      setPosts([...posts, { id: posts.length + 1, ...newPost }]);
-      setNewPost({ title: '', description: '', image: null });
+      try {
+        const docRef = await addDoc(collection(db, "posts"), {
+          title: newPost.title,
+          description: newPost.description,
+          image: newPost.image
+        });
+        setPosts([...posts, { id: docRef.id, ...newPost }]);
+        setNewPost({ title: '', description: '', image: null });
+      } catch (error) {
+        console.error("Error adding post: ", error);
+      }
     }
   };
+
   const startEditingPost = (post) => {
     setEditingPost(post.id);
     setUpdatedPost({
@@ -43,12 +68,10 @@ const Blog = () => {
     });
   };
 
-  const updatePost = (id) => {
-    setPosts(
-      posts.map((post) =>
-        post.id === id ? { ...post, ...updatedPost } : post
-      )
-    );
+  const updatePost = async (id) => {
+    const postDoc = doc(db, "posts", id);
+    await updateDoc(postDoc, updatedPost);
+    setPosts(posts.map((post) => post.id === id ? { ...post, ...updatedPost } : post));
     setEditingPost(null);
     setUpdatedPost({ title: '', description: '', image: null });
   };
@@ -59,7 +82,9 @@ const Blog = () => {
       image: URL.createObjectURL(e.target.files[0])
     });
   };
-  const deletePost = (id) => {
+
+  const deletePost = async (id) => {
+    await deleteDoc(doc(db, "posts", id));
     setPosts(posts.filter(post => post.id !== id));
   };
 
