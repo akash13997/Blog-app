@@ -7,6 +7,7 @@ import Signup from "./components/Signup";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 import MyNavbar from "./components/Navbar";
 import Blog from "./components/Blog";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -17,10 +18,25 @@ function App() {
         <Col>
           <UserAuthContextProvider>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/login" element={<Login />} />
+              {/* <Route path="/" element={<Home />} /> */}
+              <Route path="/" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route 
+                path="/Home" 
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/blog" 
+                element={
+                  <ProtectedRoute>
+                    <Blog />
+                  </ProtectedRoute>
+                } 
+              />
             </Routes>
           </UserAuthContextProvider>
         </Col>

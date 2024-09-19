@@ -10,13 +10,13 @@ const Home = () => {
     try {
       await logOut();
       sessionStorage.removeItem("login")
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.log(error.message);
     }
   };
   const handleNavLogin = () =>{
-    navigate("/login")
+    navigate("/")
   }
   return (
     <>

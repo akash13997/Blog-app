@@ -16,7 +16,7 @@ const Login = () => {
     setError("");
     try {
       await logIn(email, password);
-      navigate("/");
+      navigate("/Home");
       sessionStorage.setItem("login", true)
     } catch (err) {
       setError(err.message);
