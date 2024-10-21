@@ -2,178 +2,160 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
-const Blog = () => {
-  const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState({
-    title: '',
-    description: '',
-    image: null
+const UserDetails = () => {
+  const [users, setUsers] = useState([]);
+  const [newUser, setNewUser] = useState({
+    username: '',
+    email: '',
+    mobile: ''
   });
-  const [editingPost, setEditingPost] = useState(null);
-  const [updatedPost, setUpdatedPost] = useState({
-    title: '',
-    description: '',
-    image: null
+  const [editingUser, setEditingUser] = useState(null);
+  const [updatedUser, setUpdatedUser] = useState({
+    username: '',
+    email: '',
+    mobile: ''
   });
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUsers = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "posts"));
-        const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setPosts(postsData);
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const usersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setUsers(usersData);
       } catch (error) {
-        console.error("Error fetching posts: ", error);
+        console.error("Error fetching users: ", error);
       }
     };
 
-    fetchPosts();
+    fetchUsers();
   }, []);
 
-  const handleNewPostChange = (e) => {
-    setNewPost({
-      ...newPost,
+  const handleNewUserChange = (e) => {
+    setNewUser({
+      ...newUser,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleImageUpload = (e) => {
-    setNewPost({
-      ...newPost,
-      image: URL.createObjectURL(e.target.files[0])
-    });
-  };
-  const addPost = async () => {
-    if (newPost.title && newPost.description) {
+  const addUser = async () => {
+    if (newUser.username && newUser.email && newUser.mobile) {
       try {
-        const docRef = await addDoc(collection(db, "posts"), {
-          title: newPost.title,
-          description: newPost.description,
-          image: newPost.image
-        });
-        setPosts([...posts, { id: docRef.id, ...newPost }]);
-        setNewPost({ title: '', description: '', image: null });
+        const docRef = await addDoc(collection(db, "users"), newUser);
+        setUsers([...users, { id: docRef.id, ...newUser }]);
+        setNewUser({ username: '', email: '', mobile: '' });
       } catch (error) {
-        console.error("Error adding post: ", error);
+        console.error("Error adding user: ", error);
       }
     }
   };
 
-  const startEditingPost = (post) => {
-    setEditingPost(post.id);
-    setUpdatedPost({
-      title: post.title,
-      description: post.description,
-      image: post.image,
+  const startEditingUser = (user) => {
+    setEditingUser(user.id);
+    setUpdatedUser({
+      username: user.username,
+      email: user.email,
+      mobile: user.mobile,
     });
   };
 
-  const updatePost = async (id) => {
-    const postDoc = doc(db, "posts", id);
-    await updateDoc(postDoc, updatedPost);
-    setPosts(posts.map((post) => post.id === id ? { ...post, ...updatedPost } : post));
-    setEditingPost(null);
-    setUpdatedPost({ title: '', description: '', image: null });
+  const updateUser = async (id) => {
+    const userDoc = doc(db, "users", id);
+    await updateDoc(userDoc, updatedUser);
+    setUsers(users.map((user) => user.id === id ? { ...user, ...updatedUser } : user));
+    setEditingUser(null);
+    setUpdatedUser({ username: '', email: '', mobile: '' });
   };
 
-  const handleUpdateImageUpload = (e) => {
-    setUpdatedPost({
-      ...updatedPost,
-      image: URL.createObjectURL(e.target.files[0])
-    });
-  };
-
-  const deletePost = async (id) => {
-    await deleteDoc(doc(db, "posts", id));
-    setPosts(posts.filter(post => post.id !== id));
+  const deleteUser = async (id) => {
+    await deleteDoc(doc(db, "users", id));
+    setUsers(users.filter(user => user.id !== id));
   };
 
   return (
     <div className="container mt-5">
-      <h2>Add New Blog</h2>
+      <h2>Add New User</h2>
 
       <div className="mb-3">
         <input
           type="text"
           className="form-control mb-2"
-          name="title"
-          value={newPost.title}
-          placeholder="Enter blog title"
-          onChange={handleNewPostChange}
-        />
-        <textarea
-          className="form-control mb-2"
-          name="description"
-          value={newPost.description}
-          placeholder="Enter blog description"
-          onChange={handleNewPostChange}
-          rows="4"
+          name="username"
+          value={newUser.username}
+          placeholder="Enter username"
+          onChange={handleNewUserChange}
         />
         <input
-          type="file"
+          type="email"
           className="form-control mb-2"
-          onChange={handleImageUpload}
+          name="email"
+          value={newUser.email}
+          placeholder="Enter email"
+          onChange={handleNewUserChange}
         />
-        {newPost.image && (
-          <img src={newPost.image} alt="Cover" className="img-fluid mb-2" width="100px" height="100px" />
-        )}
-        <button className="btn btn-primary mx-3" onClick={addPost}>
-          Add Post
+        <input
+          type="number"
+          className="form-control mb-2"
+          name="mobile"
+          value={newUser.mobile}
+          placeholder="Enter mobile number"
+          onChange={handleNewUserChange}
+        />
+        <button className="btn btn-primary mx-3" onClick={addUser}>
+          Add User
         </button>
       </div>
 
-      <h3>All Blog Posts</h3>
-      {posts.length === 0 ? (
-        <p>No posts available.</p>
+      <h3>All Users</h3>
+      {users.length === 0 ? (
+        <p>No users available.</p>
       ) : (
         <ul className="list-group">
-          {posts.map((post) => (
-            <li key={post.id} className="list-group-item">
-              {editingPost === post.id ? (
+          {users.map((user) => (
+            <li key={user.id} className="list-group-item">
+              {editingUser === user.id ? (
                 <div>
                   <input
                     type="text"
                     className="form-control mb-2"
-                    name="title"
-                    value={updatedPost.title}
-                    placeholder="Update blog title"
-                    onChange={(e) => setUpdatedPost({ ...updatedPost, title: e.target.value })}
-                  />
-                  <textarea
-                    className="form-control mb-2"
-                    name="description"
-                    value={updatedPost.description}
-                    onChange={(e) => setUpdatedPost({ ...updatedPost, description: e.target.value })}
-                    rows="4"
+                    name="username"
+                    value={updatedUser.username}
+                    placeholder="Update username"
+                    onChange={(e) => setUpdatedUser({ ...updatedUser, username: e.target.value })}
                   />
                   <input
-                    type="file"
+                    type="email"
                     className="form-control mb-2"
-                    onChange={handleUpdateImageUpload}
+                    name="email"
+                    value={updatedUser.email}
+                    onChange={(e) => setUpdatedUser({ ...updatedUser, email: e.target.value })}
+                    placeholder="Update email"
                   />
-                  {updatedPost.image && (
-                    <img src={updatedPost.image} alt="Updated Cover" className="img-fluid mb-2" width="100px" height="100px"/>
-                  )}
-                  <button className="btn btn-success mx-3" onClick={() => updatePost(post.id)}>
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    name="mobile"
+                    value={updatedUser.mobile}
+                    onChange={(e) => setUpdatedUser({ ...updatedUser, mobile: e.target.value })}
+                    placeholder="Update mobile number"
+                  />
+                  <button className="btn btn-success mx-3" onClick={() => updateUser(user.id)}>
                     Save
                   </button>
                 </div>
               ) : (
                 <div>
-                  <h4>{post.title}</h4>
-                  <p>{post.description}</p>
-                  {post.image && (
-                    <img src={post.image} alt="Cover" className="img-fluid mb-2" width="100px" height="100px" />
-                  )}
+                  <h4>{user.username}</h4>
+                  <p>Email: {user.email}</p>
+                  <p>Mobile: {user.mobile}</p>
                   <button
                     className="btn btn-warning btn-sm mr-2 mx-4"
-                    onClick={() => startEditingPost(post)}
+                    onClick={() => startEditingUser(user)}
                   >
                     Edit
                   </button>
                   <button
                     className="btn btn-danger btn-sm mr-2 mx-4"
-                    onClick={() => deletePost(post.id)}
+                    onClick={() => deleteUser(user.id)}
                   >
                     Delete
                   </button>
@@ -187,4 +169,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default UserDetails;
