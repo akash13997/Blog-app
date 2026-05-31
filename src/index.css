@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.card {
+  border-radius: 12px;
+}
+
+.card-title {
+  word-break: break-word;
+}
+
+.card-text {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 180px !important;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
